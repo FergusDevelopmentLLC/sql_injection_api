@@ -1,8 +1,7 @@
 const sqlite3 = require('sqlite3').verbose()
-
 const createSeedData = () => {
   
-  let db = new sqlite3.Database('player')
+  let db = new sqlite3.Database('player.db')
 
   db.serialize(() => {
 
@@ -46,27 +45,41 @@ const createSeedData = () => {
   db.close()
 }
 
-const getPlayers = () => {
-  
-  let db = new sqlite3.Database('player')
-  let players = []
-
-  db.serialize(() => {
-
-    db.each("SELECT name, city, email FROM players", (err, row) => {
-      let player = {}
-      player.name = row.name
-      player.city = row.city
-      player.email = row.email
-      players.push(player)
+const getPlayers = (db) => {
+  return new Promise(resolve => {
+    let data = []
+    db.all('SELECT name, city, email FROM players', [] , (err, rows) => {
+      if(rows && rows.length > 0) rows.forEach((row)=> data.push(row))
+      resolve(data)
     })
-    
   })
-
-  db.close()
-
-  return players
-
 }
 
-module.exports = { createSeedData, getPlayers }
+
+const getPlayerByEmail = (db, email) => {
+  return new Promise(resolve => {
+    let data = []
+    let sql = `SELECT name, city, email FROM players WHERE email='${email}'`
+    // console.log('sql', sql)
+    db.all(sql, [] , (err, rows) => {
+      if(rows && rows.length > 0) rows.forEach((row)=> data.push(row))
+      resolve(data)
+    })
+
+  })
+}
+
+const getPlayerByEmailStrong = (db, email) => {
+  return new Promise(resolve => {
+    let data = []
+    let sql = `SELECT name, city, email FROM players WHERE email = ?`
+    // console.log('sql', sql)
+    db.all(sql, [email] , (err, rows) => {
+      if(rows && rows.length > 0) rows.forEach((row)=> data.push(row))
+      resolve(data)
+    })
+
+  })
+}
+
+module.exports = { createSeedData, getPlayers, getPlayerByEmail, getPlayerByEmailStrong }
