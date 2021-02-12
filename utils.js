@@ -37,7 +37,7 @@ const createSeedData = () => {
       db.run(`INSERT INTO players (name, city, email) values ('${player.name}','${player.city}','${player.email}')`)
     })
     
-    db.each("SELECT name, city, email FROM players", function(err, row) {
+    db.each("SELECT name, city, email FROM players", (err, row) => {
       console.log(`${row.name}, ${row.city}, ${row.email}`)
     })
   
@@ -46,4 +46,27 @@ const createSeedData = () => {
   db.close()
 }
 
-module.exports = { createSeedData }
+const getPlayers = () => {
+  
+  let db = new sqlite3.Database('player')
+  let players = []
+
+  db.serialize(() => {
+
+    db.each("SELECT name, city, email FROM players", (err, row) => {
+      let player = {}
+      player.name = row.name
+      player.city = row.city
+      player.email = row.email
+      players.push(player)
+    })
+    
+  })
+
+  db.close()
+
+  return players
+
+}
+
+module.exports = { createSeedData, getPlayers }

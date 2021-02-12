@@ -7,20 +7,7 @@ utils.createSeedData()
 
 app.use('/players', (req, res, next) => {
   
-  const players = [
-    {
-      name: 'Ruth',
-      city: 'New York'
-    },
-    {
-      name: 'Jordan',
-      city: 'Chicago'
-    },
-    {
-      name: 'Brady',
-      city: 'Tampa Bay'
-    }
-  ]
+  const players = utils.getPlayers()
   
   res.status(200).json(players)
 })
