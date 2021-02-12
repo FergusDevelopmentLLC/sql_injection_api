@@ -1,7 +1,9 @@
-
 const express = require('express')
+const utils = require('./utils')
 
 const app = express()
+
+utils.createSeedData()
 
 app.use('/players', (req, res, next) => {
   
