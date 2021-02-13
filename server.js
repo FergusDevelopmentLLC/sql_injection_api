@@ -11,6 +11,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 let db
 
+app.get('/', (req, res, next) => {
+  res.status(200).json(`Hello from node-express. The current server date/time is: ${new Date()}`)
+})
+
 app.get('/players', async (req, res, next) => {
   db = new sqlite3.Database('player.db')
   const players = await utils.getPlayers(db)
@@ -34,14 +38,6 @@ app.post('/playerByEmailStrong', async (req, res, next) => {
   res.status(200).json(player)
 })
 
-app.get('/', (req, res, next) => {
-  res.status(200).json(`Hello from node-express. The current server date/time is: ${new Date()}`)
-})
-
-const server = app.listen(8888, () => {
+const server = app.listen(4060, () => {
   console.log('App listening at port %s', server.address().port)
 })
-
-// {
-//   "email": "jump23@bulls.com' union SELECT 1,sql,3 FROM sqlite_master WHERE type!='meta' AND sql NOT NULL AND name NOT LIKE 'sqlite_%' AND name = 'players';"
-// }
