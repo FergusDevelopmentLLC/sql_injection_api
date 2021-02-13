@@ -33,7 +33,7 @@ const createSeedData = () => {
             `)
   
     data.forEach((player) => {
-      db.run(`INSERT INTO players (name, city, email) values ('${player.name}','${player.city}','${player.email}')`)
+      db.run(`INSERT INTO players (name, city, email) values ('${player.name}','${player.city}','${player.email}')`)//should use parameterized sql here
     })
     
     db.each("SELECT name, city, email FROM players", (err, row) => {
@@ -47,7 +47,7 @@ const createSeedData = () => {
 
 const getPlayers = (db) => {
   return new Promise(resolve => {
-    let data = []
+    const data = []
     db.all('SELECT name, city, email FROM players', [] , (err, rows) => {
       if(rows && rows.length > 0) rows.forEach((row)=> data.push(row))
       resolve(data)
@@ -55,30 +55,25 @@ const getPlayers = (db) => {
   })
 }
 
-
 const getPlayerByEmail = (db, email) => {
   return new Promise(resolve => {
-    let data = []
-    let sql = `SELECT name, city, email FROM players WHERE email='${email}'`
-    // console.log('sql', sql)
+    const data = []
+    const sql = `SELECT name, city, email FROM players WHERE email='${email}'`
     db.all(sql, [] , (err, rows) => {
       if(rows && rows.length > 0) rows.forEach((row)=> data.push(row))
       resolve(data)
     })
-
   })
 }
 
 const getPlayerByEmailStrong = (db, email) => {
   return new Promise(resolve => {
-    let data = []
-    let sql = `SELECT name, city, email FROM players WHERE email = ?`
-    // console.log('sql', sql)
-    db.all(sql, [email] , (err, rows) => {
+    const data = []
+    const sql = `SELECT name, city, email FROM players WHERE email = ?`
+    db.all(sql,[email], (err, rows) => {
       if(rows && rows.length > 0) rows.forEach((row)=> data.push(row))
       resolve(data)
     })
-
   })
 }
 
