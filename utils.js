@@ -59,6 +59,9 @@ const getPlayerByEmail = (db, email) => {
   return new Promise(resolve => {
     const data = []
     const sql = `SELECT name, city, email FROM players WHERE email='${email}'`
+    
+    console.log('dangerous SQL:', sql)
+
     db.all(sql, [] , (err, rows) => {
       if(rows && rows.length > 0) rows.forEach((row)=> data.push(row))
       resolve(data)
