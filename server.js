@@ -1,6 +1,6 @@
 const express = require('express')
 const utils = require('./utils')
-const bodyParser = require('body-parser');
+const bodyParser = require('body-parser')
 const sqlite3 = require('sqlite3').verbose()
 
 const app = express()
@@ -10,20 +10,21 @@ app.use(bodyParser.urlencoded({ extended: true }));
 //utils.createSeedData()
 
 let db
+let dbFileName = 'player.db'
 
 app.get('/', (req, res, next) => {
   res.status(200).json(`Hello from node-express. The current server date/time is: ${new Date()}`)
 })
 
 app.get('/players', async (req, res, next) => {
-  db = new sqlite3.Database('player.db')
+  db = new sqlite3.Database(dbFileName)
   const players = await utils.getPlayers(db)
   db.close()
   res.status(200).json(players)
 })
 
 app.post('/playerByEmail', async (req, res, next) => {
-  db = new sqlite3.Database('player.db')
+  db = new sqlite3.Database(dbFileName)
   let emailAddress = req.body.email
   const player = await utils.getPlayerByEmail(db, emailAddress)
   db.close()
@@ -31,7 +32,7 @@ app.post('/playerByEmail', async (req, res, next) => {
 })
 
 app.post('/playerByEmailStrong', async (req, res, next) => {
-  db = new sqlite3.Database('player.db')
+  db = new sqlite3.Database(dbFileName)
   let emailAddress = req.body.email
   const player = await utils.getPlayerByEmailStrong(db, emailAddress)
   db.close()
